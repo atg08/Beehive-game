@@ -76,24 +76,59 @@ class BSTTest(unittest.TestCase):
 
 
 
-    # @timeout()
-    # @number("1.2")
-    # def test_p2(self):
-    #     BST = BinarySearchTree()
-    #     BST[95] = 1
-    #     BST[73] = 2
-    #     BST[99] = 3
-    #     self.assertEqual(BST.root.subtree_size, 3)
-    #     BST[50] = 4
-    #     BST[85] = 5
-    #     BST[80] = 6
+    @timeout()
+    @number("1.2")
+    def test_p2(self):
+        BST = BinarySearchTree()
+        BST[95] = 1
+        BST[73] = 2
+        BST[99] = 3
+        self.assertEqual(BST.root.subtree_size, 3)
+        BST[50] = 4
+        BST[85] = 5
+        BST[80] = 6
 
-    #     self.assertEqual(BST.root.subtree_size, 6)
-    #     self.assertEqual(BST.root.left.subtree_size, 4)
-    #     self.assertEqual(BST.root.right.subtree_size, 1)
-    #     self.assertEqual(BST.root.left.left.subtree_size, 1)
-    #     self.assertEqual(BST.root.left.right.subtree_size, 2)
-    #     self.assertEqual(BST.root.left.right.left.subtree_size, 1)
+        self.assertEqual(BST.root.subtree_size, 6)
+        self.assertEqual(BST.root.left.subtree_size, 4)
+        self.assertEqual(BST.root.right.subtree_size, 1)
+        self.assertEqual(BST.root.left.left.subtree_size, 1)
+        self.assertEqual(BST.root.left.right.subtree_size, 2)
+        self.assertEqual(BST.root.left.right.left.subtree_size, 1)
+
+        try:
+            BST[80] = 6
+            BST[50] = 4
+            BST[85] = 5
+            BST[80] = 6
+        except ValueError:
+            print("went to ValueError")
+            self.assertEqual(BST.root.subtree_size, 6)
+            self.assertEqual(BST.root.left.subtree_size, 4)
+            self.assertEqual(BST.root.right.subtree_size, 1)
+            self.assertEqual(BST.root.left.left.subtree_size, 1)
+            self.assertEqual(BST.root.left.right.subtree_size, 2)
+            self.assertEqual(BST.root.left.right.left.subtree_size, 1)
+        else:
+            print("went to else")
+
+
+        del BST[73]
+        self.assertEqual(BST.root.subtree_size, 5)
+        self.assertEqual(BST.root.left.subtree_size, 3)
+        self.assertEqual(BST.root.right.subtree_size, 1)
+        self.assertEqual(BST.root.left.left.subtree_size, 1)
+        self.assertEqual(BST.root.left.right.subtree_size, 1)
+        # self.assertEqual(BST.root.left.right.left.subtree_size, 1)
+
+        del BST[95]
+        self.assertEqual(BST.root.subtree_size, 4)
+        self.assertEqual(BST.root.left.subtree_size, 3)
+        # self.assertEqual(BST.root.right.subtree_size, 1)
+        self.assertEqual(BST.root.left.left.subtree_size, 1)
+        self.assertEqual(BST.root.left.right.subtree_size, 1)
+        # self.assertEqual(BST.root.left.right.left.subtree_size, 1)
+
+
 
     # @timeout()
     # @number("1.3")

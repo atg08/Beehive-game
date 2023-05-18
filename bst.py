@@ -93,8 +93,10 @@ class BinarySearchTree(Generic[K, I]):
             self.length += 1
         elif key < current.key:
             current.left = self.insert_aux(current.left, key, item)
+            current.subtree_size += 1
         elif key > current.key:
             current.right = self.insert_aux(current.right, key, item)
+            current.subtree_size += 1
         else:  # key == current.key
             raise ValueError('Inserting duplicate item')
         return current
@@ -112,8 +114,10 @@ class BinarySearchTree(Generic[K, I]):
             raise ValueError('Deleting non-existent item')
         elif key < current.key:
             current.left  = self.delete_aux(current.left, key)
+            current.subtree_size -= 1
         elif key > current.key:
             current.right = self.delete_aux(current.right, key)
+            current.subtree_size -= 1
         else:  # we found our key => do actual deletion
             if self.is_leaf(current):
                 self.length -= 1
@@ -130,6 +134,8 @@ class BinarySearchTree(Generic[K, I]):
             current.key  = succ.key
             current.item = succ.item
             current.right = self.delete_aux(current.right, succ.key)
+            current.subtree_size -= 1
+            
 
         return current
 
