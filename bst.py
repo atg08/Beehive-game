@@ -30,7 +30,7 @@ class BinarySearchTree(Generic[K, I]):
 
         self.root = None
         self.length = 0
-        self.number_element = 0
+
     def is_empty(self) -> bool:
         """
             Checks to see if the bst is empty
@@ -194,4 +194,4 @@ class BinarySearchTree(Generic[K, I]):
         """
         Finds the kth smallest value by key in the subtree rooted at current.
         """
-        return self.number_element
+        return current.subtree_size
