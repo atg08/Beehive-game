@@ -121,15 +121,12 @@ class BinarySearchTree(Generic[K, I]):
         else:  # we found our key => do actual deletion
             if self.is_leaf(current):
                 self.length -= 1
-                current.subtree_size -= 1
                 return None
             elif current.left is None:
                 self.length -= 1
-                current.subtree_size -= 1
                 return current.right
             elif current.right is None:
                 self.length -= 1
-                current.subtree_size -= 1
                 return current.left
 
             # general case => find a successor
@@ -137,6 +134,7 @@ class BinarySearchTree(Generic[K, I]):
             current.key  = succ.key
             current.item = succ.item
             current.right = self.delete_aux(current.right, succ.key)
+            current.subtree_size -= 1
 
         return current
 
@@ -194,4 +192,4 @@ class BinarySearchTree(Generic[K, I]):
         """
         Finds the kth smallest value by key in the subtree rooted at current.
         """
-        return current.subtree_size
+        return NotImplementedError
