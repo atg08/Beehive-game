@@ -130,25 +130,87 @@ class BSTTest(unittest.TestCase):
 
 
 
-    # @timeout()
-    # @number("1.3")
-    # def test_p3(self):
-    #     BST = BinarySearchTree()
-    #     BST[95] = 1
-    #     BST[73] = 2
-    #     BST[99] = 3
-    #     BST[50] = 4
-    #     BST[85] = 5
-    #     BST[80] = 6
+    @timeout()
+    @number("1.3")
+    def test_p3(self):
+        BST = BinarySearchTree()
+        BST[95] = 1
+        BST[73] = 2
+        BST[99] = 3
+        BST[50] = 4
+        BST[85] = 5
+        BST[80] = 6
+        BST[83] = 7
+        BST[86] = 8
+        BST[51] = 9
 
-    #     kth = BST.kth_smallest(3, BST.root)
-    #     self.assertEqual(kth.key, 80)
-    #     self.assertEqual(kth.item, 6)
+        BST.draw()
 
-    #     kth = BST.kth_smallest(2, BST.root.left.right)
-    #     self.assertEqual(kth.key, 85)
-    #     self.assertEqual(kth.item, 5)
+        kth = BST.kth_smallest(1, BST.root)
+        self.assertEqual(kth.key, 50)
+        self.assertEqual(kth.item, 4)
 
-    #     kth = BST.kth_smallest(5, BST.root)
-    #     self.assertEqual(kth.key, 95)
-    #     self.assertEqual(kth.item, 1)
+        kth = BST.kth_smallest(2, BST.root)
+        self.assertEqual(kth.key, 51)
+        self.assertEqual(kth.item, 9)
+
+        kth = BST.kth_smallest(3, BST.root)
+        self.assertEqual(kth.key, 73)
+        self.assertEqual(kth.item, 2)
+
+        kth = BST.kth_smallest(4, BST.root)
+        self.assertEqual(kth.key, 80)
+        self.assertEqual(kth.item, 6)
+
+        kth = BST.kth_smallest(5, BST.root)
+        self.assertEqual(kth.key, 83)
+        self.assertEqual(kth.item, 7)
+
+        kth = BST.kth_smallest(6, BST.root)
+        self.assertEqual(kth.key, 85)
+        self.assertEqual(kth.item, 5)
+
+        kth = BST.kth_smallest(7, BST.root)
+        self.assertEqual(kth.key, 86)
+        self.assertEqual(kth.item, 8)
+
+        kth = BST.kth_smallest(8, BST.root)
+        self.assertEqual(kth.key, 95)
+        self.assertEqual(kth.item, 1)
+
+        kth = BST.kth_smallest(9, BST.root)
+        self.assertEqual(kth.key, 99)
+        self.assertEqual(kth.item, 3)
+
+    @timeout()
+    @number("1.4")
+    def test_p4(self):
+        BST = BinarySearchTree()
+        BST[95] = 3
+        BST[73] = 2
+        BST[50] = 1
+        
+
+        kth = BST.kth_smallest(1, BST.root)
+        self.assertEqual(kth.key, 50)
+        self.assertEqual(kth.item, 1)
+
+        BST[1] = 1
+        BST[5] = 4
+        BST[3] = 2
+        BST[4] = 3
+        
+
+        kth = BST.kth_smallest(4, BST.root)
+        self.assertEqual(kth.key, 5)
+        self.assertEqual(kth.item, 4)
+
+        # kth = BST.kth_smallest(2, BST.root.left.right)
+        # self.assertEqual(kth.key, 85)
+        # self.assertEqual(kth.item, 5)
+
+        # kth = BST.kth_smallest(5, BST.root)
+        # self.assertEqual(kth.key, 95)
+        # self.assertEqual(kth.item, 1)
+
+
