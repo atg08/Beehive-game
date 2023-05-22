@@ -6,9 +6,30 @@ from referential_array import ArrayR
 I = TypeVar('I')
 Point = Tuple[int, int, int]
 
+
+def get_octant(reference_key : Point , input_key : Point) -> int:
+      
+        if input_key[2] >= reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] >= reference_key[0]: 
+            return 0
+        elif input_key[2] >= reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] < reference_key[0]: 
+            return 1
+        elif input_key[2] >= reference_key[2] and input_key[1] < reference_key[1] and input_key[0] >= reference_key[0]: 
+            return 2
+        elif input_key[2] >= reference_key[2] and input_key[1] < reference_key[1] and input_key[0] < reference_key[0]: 
+            return 3
+        elif input_key[2] < reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] >= reference_key[0]: 
+            return 4
+        elif input_key[2] < reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] < reference_key[0]: 
+            return 5
+        elif input_key[2] < reference_key[2] and input_key[1] < reference_key[1] and input_key[0] >= reference_key[0]: 
+            return 6
+        elif input_key[2] < reference_key[2] and input_key[1] < reference_key[1] and input_key[0] < reference_key[0]: 
+            return 7
+
+
+
 @dataclass
 class BeeNode:
-
     
     key: Point
     my_child : ArrayR[BeeNode] 
@@ -35,43 +56,9 @@ class BeeNode:
                 
 
     def get_child_for_key(self, point: Point) -> BeeNode | None:
-        print("point is " , point)
-        for child in range (len(self.my_child)):
-            if self.my_child[child] != None:
-                match child:
-                    case 0:
-                            if point[2] >= self.key[2] and point[1] >= self.key[1] and point[0] >= self.key[0]:
-                                print("\nmy child is " , self.my_child[child].key)
-                                return self.my_child[child]
-                    case 1:
-                            if point[2] >= self.key[2] and point[1] >= self.key[1] and point[0] < self.key[0]:
-                                print("\nmy child is " , self.my_child[child].key)
-                                return self.my_child[child]
-                    case 2:
-                            if point[2] >= self.key[2] and point[1] < self.key[1] and point[0] >= self.key[0]:
-                                print("\nmy child is " , self.my_child[child].key)
-                                return self.my_child[child]
-                    case 3:
-                            if point[2] >= self.key[2] and point[1] < self.key[1] and point[0] < self.key[0]:
-                                print("\nmy child is " , self.my_child[child].key)
-                                return self.my_child[child]
-                    case 4:
-                            if point[2] < self.key[2] and point[1] >= self.key[1] and point[0] >= self.key[0]:
-                                print("\nmy child is " , self.my_child[child].key)
-                                return self.my_child[child]
-                    case 5:
-                            if point[2] < self.key[2] and point[1] >= self.key[1] and point[0] < self.key[0]:
-                                print("\nmy child is " , self.my_child[child].key)
-                                return self.my_child[child]
-                    case 6:
-                            if point[2] < self.key[2] and point[1] < self.key[1] and point[0] >= self.key[0]:
-                                print("\nmy child is " , self.my_child[child].key)
-                                return self.my_child[child]
-                    case 7:
-                            if point[2] < self.key[2] and point[1] < self.key[1] and point[0] < self.key[0]:
-                                print("\nmy child is " , self.my_child[child].key)
-                                return self.my_child[child]                          
-        return None
+          octant = get_octant(reference_key = self.key , input_key = point)
+          return self.my_child[octant]
+          
 
 
 class ThreeDeeBeeTree(Generic[I]):
@@ -113,7 +100,20 @@ class ThreeDeeBeeTree(Generic[I]):
         return node.item
 
     def get_tree_node_by_key(self, key: Point) -> BeeNode:
-        raise NotImplementedError()
+
+        return self.get_tree_node_by_key_aux(current = self.root ,key = key)
+    
+    def get_tree_node_by_key_aux(self, current : BeeNode , key : Point) -> BeeNode:
+
+        if current is None:
+            raise KeyError('Key not found: {0}'.format(key))
+        elif current.key == key:
+            return current
+        else:
+            octant = get_octant(reference_key = current.key , input_key = key)
+            return self.get_tree_node_by_key_aux(current = current.my_child[octant] , key = key )
+            
+
 
     def __setitem__(self, key: Point, item: I) -> None:
         self.root = self.insert_aux(self.root, key, item)
@@ -123,78 +123,24 @@ class ThreeDeeBeeTree(Generic[I]):
             Attempts to insert an item into the tree, it uses the Key to insert it
         """
 
-        #temp_node : BeeNode = None
         if current is None:
             current = BeeNode(key = key , item = item)
-            print("current id " , id(current.my_child))
             self.length += 1
-        elif key[2] >= current.key[2] and key[1] >= current.key[1] and key[0] >= current.key[0]: 
-                    current.my_child[0] = self.insert_aux(current = current.my_child[0], key = key, item = item)
-                    current.subtree_size += 1
-        elif key[2] >= current.key[2] and key[1] >= current.key[1] and key[0] < current.key[0]: 
-                    current.my_child[1] = self.insert_aux(current.my_child[1], key, item)
-                    # current.my_child[1] = temp_node
-                    current.subtree_size += 1
-        elif key[2] >= current.key[2] and key[1] < current.key[1] and key[0] >= current.key[0]: 
-                    current.my_child[2] = self.insert_aux(current = current.my_child[2], key = key, item = item) 
-                    current.subtree_size += 1 
-        elif key[2] >= current.key[2] and key[1] < current.key[1] and key[0] < current.key[0]: 
-                    current.my_child[3] = self.insert_aux(current = current.my_child[3], key = key, item = item)
-                    current.subtree_size += 1 
-        elif key[2] < current.key[2] and key[1] >= current.key[1] and key[0] >= current.key[0]: 
-                    current.my_child[4] = self.insert_aux(current = current.my_child[4], key = key, item = item) 
-                    current.subtree_size += 1
-        elif key[2] < current.key[2] and key[1] >= current.key[1] and key[0] < current.key[0]: 
-                    current.my_child[5] = self.insert_aux(current = current.my_child[5], key = key, item = item)
-                    current.subtree_size += 1
-        elif key[2] < current.key[2] and key[1] < current.key[1] and key[0] >= current.key[0]: 
-                    current.my_child[6] = self.insert_aux(current = current.my_child[6], key = key, item = item)
-                    current.subtree_size += 1
-        elif key[2] < current.key[2] and key[1] < current.key[1] and key[0] < current.key[0]: 
-                    current.my_child[7] = self.insert_aux(current = current.my_child[7], key = key, item = item)
-                    current.subtree_size += 1
+        elif current.key == key:
+            raise ValueError("Key already exists")
         else:
-            return ValueError("Key already exists")
+            octant = get_octant(reference_key = current.key , input_key = key)
+            current.my_child[octant] = self.insert_aux(current = current.my_child[octant] , key = key , item = item)
+            current.subtree_size += 1
         return current
-    
-        # if current is None:
-        #     current = BeeNode(key = key , item = item)
-        # if key[2] > current.key[2]:
-        #     if key[1] > current.key[1]:
-        #         if key[0] > current.key[0]: 
-        #             current.my_child[0] = self.insert_aux(current = current.my_child[0], key = key, item = item)
-        #         else:
-        #             current.my_child[1] = self.insert_aux(current = current.my_child[1], key = key, item = item)
-        #     else:
-        #         if key[0] > current.key[0]:
-        #             current.my_child[2] = self.insert_aux(current = current.my_child[2], key = key, item = item)
-        #         else:
-        #             current.my_child[3] = self.insert_aux(current = current.my_child[3], key = key, item = item)
-        # elif key[2] < current.key[2]:
-        #     if key[1] > current.key[1]:
-        #         if key[0] > current.key[0]:
-        #             current.my_child[4] = self.insert_aux(current = current.my_child[4], key = key, item = item)
-        #         else:
-        #             current.my_child[5] = self.insert_aux(current = current.my_child[5], key = key, item = item)
-        #     else:
-        #         if key[0] > current.key[0]:
-        #             current.my_child[6] = self.insert_aux(current = current.my_child[6], key = key, item = item)
-        #         else:
-        #             current.my_child[7] = self.insert_aux(current = current.my_child[7], key = key, item = item)
-        # else:
-        #     return ValueError("key already exists")
-        # return current
 
-
-
-
-
-
-        # raise NotImplementedError()
+        
 
     def is_leaf(self, current: BeeNode) -> bool:
         """ Simple check whether or not the node is a leaf. """
-        raise NotImplementedError()
+        return current.subtree_size == 1
+    
+
 
 if __name__ == "__main__":
     tdbt = ThreeDeeBeeTree()
