@@ -5,23 +5,46 @@ from referential_array import ArrayR
 
 I = TypeVar('I')
 Point = Tuple[int, int, int]
+NUMBER_OF_CHILDREN = 8
 
+def get_octant(reference_key : Point, input_key : Point) -> int:
+    if input_key[2] >= reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] >= reference_key[0]: 
+        return 0
+    elif input_key[2] >= reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] < reference_key[0]: 
+        return 1
+    elif input_key[2] >= reference_key[2] and input_key[1] < reference_key[1] and input_key[0] >= reference_key[0]: 
+        return 2
+    elif input_key[2] >= reference_key[2] and input_key[1] < reference_key[1] and input_key[0] < reference_key[0]: 
+        return 3
+    elif input_key[2] < reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] >= reference_key[0]: 
+        return 4
+    elif input_key[2] < reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] < reference_key[0]: 
+        return 5
+    elif input_key[2] < reference_key[2] and input_key[1] < reference_key[1] and input_key[0] >= reference_key[0]: 
+        return 6
+    elif input_key[2] < reference_key[2] and input_key[1] < reference_key[1] and input_key[0] < reference_key[0]: 
+        return 7
+      
 @dataclass
 class BeeNode:
-
+    
     key: Point
-    item: I
+    my_child : ArrayR[BeeNode] 
+    item: I = None
+    
     subtree_size: int = 1
-    child : ArrayR[BeeNode]
 
-    def __init__(self,key:Point,item:I) -> None:
+    def __init__(self, key : Point, item : I) -> None:
         self.key = key
         self.item = item
-        self.child_array = ArrayR(length = 8)
-        
-
+        self.my_child = ArrayR(length = 8)
+        for i in range (len(self.my_child)):
+            self.my_child[i] = None
+                
     def get_child_for_key(self, point: Point) -> BeeNode | None:
-        raise NotImplementedError()
+        octant_item = get_octant(reference_key = self.key, input_key = point)
+        return self.my_child[octant_item]
+
 
 
 class ThreeDeeBeeTree(Generic[I]):
@@ -63,7 +86,17 @@ class ThreeDeeBeeTree(Generic[I]):
         return node.item
 
     def get_tree_node_by_key(self, key: Point) -> BeeNode:
-        raise NotImplementedError()
+        return self.get_tree_node_by_key_aux(current= self.root, key = Point)
+    
+    def get_tree_node_by_key_aux(self, current: BeeNode, key = Point) -> BeeNode:
+        if current is None:
+            raise ValueError ("Key is None !")
+        elif current == key:
+            return current
+        else:
+            octant_value = get_octant(reference_key = current , input_key = key)
+            return self.get_tree_node_by_key_aux(current = current.my_child[octant_value], key = key)
+
 
     def __setitem__(self, key: Point, item: I) -> None:
         self.root = self.insert_aux(self.root, key, item)
@@ -72,11 +105,23 @@ class ThreeDeeBeeTree(Generic[I]):
         """
             Attempts to insert an item into the tree, it uses the Key to insert it
         """
-        raise NotImplementedError()
+
+        if current is None:
+            current = BeeNode(key = key , item = item)
+            self.length += 1
+        elif current.key == key:
+            pass
+        else:
+            octant_value = get_octant(reference_key = current , input_key = key)
+            self.insert_aux(current = current.my_child[octant_value], key = key )
+            current.subtree_size += 1
+
+        return current
 
     def is_leaf(self, current: BeeNode) -> bool:
         """ Simple check whether or not the node is a leaf. """
-        raise NotImplementedError()
+        return current.subtree_size == 1
+
 
 if __name__ == "__main__":
     tdbt = ThreeDeeBeeTree()
