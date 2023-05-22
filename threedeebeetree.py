@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Generic, TypeVar, Tuple
 from dataclasses import dataclass, field
+from referential_array import ArrayR
 
 I = TypeVar('I')
 Point = Tuple[int, int, int]
@@ -11,6 +12,13 @@ class BeeNode:
     key: Point
     item: I
     subtree_size: int = 1
+    child : ArrayR[BeeNode]
+
+    def __init__(self,key:Point,item:I) -> None:
+        self.key = key
+        self.item = item
+        self.child_array = ArrayR(length = 8)
+        
 
     def get_child_for_key(self, point: Point) -> BeeNode | None:
         raise NotImplementedError()
