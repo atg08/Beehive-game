@@ -5,7 +5,7 @@ from referential_array import ArrayR
 
 I = TypeVar('I')
 Point = Tuple[int, int, int]
-
+NUMBER_OF_CHILDREN = 8
 
 def get_octant(reference_key : Point , input_key : Point) -> int:
       
@@ -50,7 +50,7 @@ class BeeNode:
     def __init__(self, key : Point, item : I) -> None:
           self.key = key
           self.item = item
-          self.my_child = ArrayR(length = 8)
+          self.my_child = ArrayR(length = NUMBER_OF_CHILDREN)
           for i in range (len(self.my_child)):
                 self.my_child[i] = None
                 
