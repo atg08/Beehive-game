@@ -19,6 +19,7 @@ class MaxHeap(Generic[T]):
 
     def is_full(self) -> bool:
         return self.length + 1 == len(self.the_array)
+    
 
     def rise(self, k: int) -> None:
         """
