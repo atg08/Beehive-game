@@ -15,7 +15,7 @@ class Beehive:
     volume: int = 0
 
     def __gt__(self , other : Beehive) -> bool:
-        return self.nutrient_factor * min(self.capacity , self.volume) > other.nutrient_factor * min(other.capacity , other.volume)
+        return self.nutrient_factor * min(self.capacity , self.volume) >  other.nutrient_factor * min(other.capacity , other.volume)
 
     def __le__(self , other : Beehive) -> bool:
         return self.nutrient_factor * min(self.capacity , self.volume) <= other.nutrient_factor * min(other.capacity , other.volume)
@@ -40,8 +40,6 @@ class BeehiveSelector:
         else:
             new_volume = gt_hive.volume - gt_hive.capacity
 
-        new_hive = Beehive(x= gt_hive.x, y=gt_hive.y, z=gt_hive.z, capacity = gt_hive.capacity, nutrient_factor = gt_hive.nutrient_factor ,volume = new_volume)
-
-        self.add_beehive(hive = new_hive)
+        self.add_beehive(Beehive(x= gt_hive.x, y=gt_hive.y, z=gt_hive.z, capacity = gt_hive.capacity, nutrient_factor = gt_hive.nutrient_factor ,volume = new_volume))
 
         return gt_hive.nutrient_factor * min(gt_hive.capacity,gt_hive.volume)
