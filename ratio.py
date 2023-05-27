@@ -14,13 +14,13 @@ class Percentiles(Generic[T]):
         self.my_pointy_tree : list[T] = []
 
 
-    def add_point(self, item: T):
-        index = binary_search(l = self.my_pointy_tree , item = item , is_insert = True)
+    def add_point(self, item: T , input_key = lambda x : x):
+        index = binary_search(l = self.my_pointy_tree , item = item , key = input_key, is_insert = True)
         self.my_pointy_tree.insert(index , item)
     
 
-    def remove_point(self, item: T):
-        index = binary_search(l = self.my_pointy_tree , item = item)
+    def remove_point(self, item: T , input_key = lambda x : x):
+        index = binary_search(l = self.my_pointy_tree , item = item , key = input_key)
         del self.my_pointy_tree[index]
         
 

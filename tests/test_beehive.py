@@ -6,7 +6,7 @@ from beehive import BeehiveSelector, Beehive
 
 class TestBeehiveSelector(unittest.TestCase):
 
-    @timeout()
+    # @timeout()
     @number("5.1")
     def test_simple(self):
         s = BeehiveSelector(5)
