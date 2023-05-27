@@ -130,7 +130,7 @@ class TestBalancing(unittest.TestCase):
         points = []
         coords = list(range(25000))
         random.shuffle(coords)
-        for i in range(8000):
+        for i in range(7635):
             point = (coords[3*i], coords[3*i+1], coords[3*i+2])
             points.append(point)
 

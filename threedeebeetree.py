@@ -36,14 +36,15 @@ class BeeNode:
     item: I = None
     
     """
-    my_child[0] = top north-east (+++)
-    my_child[1] = top north-west (-++)
-    my_child[2] = top south-east (+-+)
-    my_child[3] = top south-west (--+)
-    my_child[4] = bot north-east (++-)
-    my_child[5] = bot north-west (-+-)
-    my_child[6] = bot south-east (+--)
-    my_child[7] = bot south-west (---)
+       index    = direction/octant (xyz)
+    my_child[0] =  top north-east  (+++)
+    my_child[1] =  top north-west  (-++)
+    my_child[2] =  top south-east  (+-+)
+    my_child[3] =  top south-west  (--+)
+    my_child[4] =  bot north-east  (++-)
+    my_child[5] =  bot north-west  (-+-)
+    my_child[6] =  bot south-east  (+--)
+    my_child[7] =  bot south-west  (---)
     """
     subtree_size: int = 1
 
@@ -114,7 +115,6 @@ class ThreeDeeBeeTree(Generic[I]):
             return self.get_tree_node_by_key_aux(current = current.my_child[octant] , key = key )
             
 
-
     def __setitem__(self, key: Point, item: I) -> None:
         self.root = self.insert_aux(self.root, key, item)
 
@@ -133,8 +133,7 @@ class ThreeDeeBeeTree(Generic[I]):
             current.my_child[octant] = self.insert_aux(current = current.my_child[octant] , key = key , item = item)
             current.subtree_size += 1
         return current
-
-        
+ 
 
     def is_leaf(self, current: BeeNode) -> bool:
         """ Simple check whether or not the node is a leaf. """

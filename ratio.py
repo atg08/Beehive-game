@@ -10,6 +10,8 @@ I = TypeVar("I")
 
 class Percentiles(Generic[T]):
 
+
+
     def __init__(self) -> None:
         self.my_pointy_tree : list[T] = []
 
@@ -28,7 +30,6 @@ class Percentiles(Generic[T]):
         lower_limit = math.ceil(len(self.my_pointy_tree)*(x/100))
         upper_limit = len(self.my_pointy_tree) - math.ceil(len(self.my_pointy_tree)*(y/100))
 
-        #print("lower limit is " , lower_limit , "\nupper limit is " , upper_limit , "\nlength of tree is " , len(self.my_pointy_tree))
         temp_list : list[T] = []
 
         for node_index in range (lower_limit, upper_limit):

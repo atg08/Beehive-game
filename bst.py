@@ -161,17 +161,13 @@ class BinarySearchTree(Generic[K, I]):
         """
         return self.traverse_left(current = current)
     
-
     
     def traverse_left(self , current : TreeNode) -> TreeNode:
 
         if current.left == None:
-            return current
-        
-        else:
-            return self.traverse_left(current = current.left)
-                
-        
+            return current  
+     
+        return self.traverse_left(current = current.left)
 
 
     def is_leaf(self, current: TreeNode) -> bool:
@@ -203,29 +199,22 @@ class BinarySearchTree(Generic[K, I]):
         """
         Finds the kth smallest value by key in the subtree rooted at current.
         """
+    
+        if current.left == None:
+            left_subtree_size = 0
+        else:
+            left_subtree_size = current.left.subtree_size
 
         if current.left == None and current.right == None:
+            if k != 1:
+                return None
             return current 
-        elif current.left != None and current.right == None:
-            if k == current.subtree_size:
-                return current
-            else:
-                return self.kth_smallest(k = k , current = current.left)
-            
-        elif current.right != None and current.left == None:
-            if k == 1:
-                return current
-            else:
-                return self.kth_smallest(k = k - 1, current = current.right)
+        elif k == left_subtree_size + 1:
+            return current
+        elif k < left_subtree_size + 1:
+            return self.kth_smallest(k = k , current = current.left)
         else:
-            if k == current.subtree_size - current.right.subtree_size:
-                return current
-            elif k < current.subtree_size - current.right.subtree_size:
-                return self.kth_smallest(k = k , current = current.left)
-            else:
-                return self.kth_smallest(k = (k - (current.subtree_size - current.right.subtree_size)), current = current.right)
-
-           
-
+            return self.kth_smallest(k = (k - (left_subtree_size + 1)) , current = current.right)
+            
         
 
