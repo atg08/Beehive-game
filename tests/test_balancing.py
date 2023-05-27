@@ -128,18 +128,22 @@ class TestBalancing(unittest.TestCase):
     def test_large(self):
         random.seed(10239123)
         points = []
-        coords = list(range(20000))
+        coords = list(range(25000))
         random.shuffle(coords)
-        for i in range(6000):
+        for i in range(8000):
             point = (coords[3*i], coords[3*i+1], coords[3*i+2])
             points.append(point)
 
         print("length of points " , len(points))
         ordering = make_ordering(points)
         print("after ord length of points " , len(points))
+        self.assertSetEqual(set(points), set(ordering))
+
         tdbt = ThreeDeeBeeTree()
         for i, p in enumerate(ordering):
             tdbt[p] = i
         
         ratio, smaller, axis = collect_worst_ratio(tdbt.root)
         self.assertLessEqual(ratio, 7, f"Axis {axis} has ratio 1:{ratio}.")
+        
+
