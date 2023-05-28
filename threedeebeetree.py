@@ -140,7 +140,6 @@ class ThreeDeeBeeTree(Generic[I]):
         return current.subtree_size == 1
     
 
-
 if __name__ == "__main__":
     tdbt = ThreeDeeBeeTree()
     tdbt[(3, 3, 3)] = "A"

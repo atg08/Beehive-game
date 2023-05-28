@@ -14,7 +14,6 @@ class Beehive:
     nutrient_factor: int
     volume: int = 0
 
-
     def __gt__(self , other : Beehive) -> bool:
         return self.nutrient_factor * min(self.capacity , self.volume) > other.nutrient_factor * min(other.capacity , other.volume)
 

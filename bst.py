@@ -254,13 +254,3 @@ class BinarySearchTree(Generic[K, I]):
         self.get_sorted_array_aux(current = current.right , array = array , parent_index = index , is_left = False)
 
         return
-
-       
-
-        
-
-
-        
-
-        
-
