@@ -89,6 +89,24 @@ class ThreeDeeBeeTree(Generic[I]):
         return self.get_tree_node_by_key_aux(current= self.root, key = key)
     
     def get_tree_node_by_key_aux(self, current: BeeNode, key = Point) -> BeeNode:
+        """
+            Attempts to get treenode through key.
+
+            Args:
+            - current : Beenode.
+            - key: Point.
+            
+            Raises:
+            - ValueError : when the key is not in current.
+            - 
+
+            Returns:
+            - Beenode : Beenode.
+
+            Complexity:
+            - Best case: O(1)
+            - Worst case: O(log n + O) : n, the total number of points. O, the number of points returned by function.
+        """
         if current is None:
             raise ValueError ("Key is None !")
         elif current.key == key:
@@ -110,7 +128,7 @@ class ThreeDeeBeeTree(Generic[I]):
             current = BeeNode(key = key , item = item)
             self.length += 1
         elif current.key == key:
-            pass
+            raise ValueError("Key already exist.")
         else:
             octant_value = get_octant(reference_key = current.key , input_key = key)
             current.my_child[octant_value] = self.insert_aux(current = current.my_child[octant_value], key = key, item = item )
@@ -119,7 +137,22 @@ class ThreeDeeBeeTree(Generic[I]):
         return current
 
     def is_leaf(self, current: BeeNode) -> bool:
-        """ Simple check whether or not the node is a leaf. """
+        """ 
+            Simple check whether or not the node is a leaf. 
+        
+            Args:
+            - current : Beenode.
+            
+            Raises:
+            - 
+            - 
+
+            Returns:
+            - Boolean : current node is leaf or not.
+
+            Complexity:
+            - Best & Worst case: O(1)
+        """
         return current.subtree_size == 1
 
 
