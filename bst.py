@@ -167,7 +167,7 @@ class BinarySearchTree(Generic[K, I]):
         elif current.right.left == None:
                 return current.right
         else:
-            return self.traverse_left(current.right.left)
+            return self.traverse_left(current = current.right.left)
     
 
 
@@ -207,7 +207,7 @@ class BinarySearchTree(Generic[K, I]):
 
             Complexity:
             - Worst case: O(n), n : the number of nodes.
-            - Best case: O(h), h : height of the left tree.
+            - Best case: O(1)
         """
         if current.left == None:
             return current  
@@ -216,7 +216,12 @@ class BinarySearchTree(Generic[K, I]):
 
 
     def is_leaf(self, current: TreeNode) -> bool:
-        """ Simple check whether or not the node is a leaf. """
+        """ 
+        Simple check whether or not the node is a leaf. 
+        
+        - Worst case : O(1)
+        - Best case : O(1)
+        """
 
         return current.left is None and current.right is None
 
@@ -257,7 +262,7 @@ class BinarySearchTree(Generic[K, I]):
 
             Complexity:
             - Worst case: O(n), n : the number of nodes.
-            - Best case: O(1) when k = current.        
+            - Best case: O(1) when k = root.        
         """
     
         if current.left == None:
@@ -277,6 +282,23 @@ class BinarySearchTree(Generic[K, I]):
             return self.kth_smallest(k = (k - (left_subtree_size + 1)) , current = current.right)
     
     def get_sorted_array(self) -> ArrayR[I]:
+        """
+            Sorts the array in order - ascending
+
+            Args:
+            - self
+
+            Raises:
+            - 
+            - 
+
+            Returns:
+            - result: ArrayR - array with sorted elements
+
+            Complexity: (from get_sorted_array_aux)
+            - Worst case: O(n), n : the number of nodes.
+            - Best case: O(1).      
+        """
 
         sorted_array : ArrayR[I] = ArrayR(length = len(self))
         if self.root.left == None:
@@ -288,7 +310,27 @@ class BinarySearchTree(Generic[K, I]):
         self.get_sorted_array_aux(current = self.root.right , array = sorted_array , parent_index = index , is_left = False)
         return sorted_array
       
-        
+    """
+            Auxilary method for get_sorted_array
+
+            Args:
+            - self
+            - current : TreeNode class
+            - array : ArrayR object
+            - parent_index : int - gives the index in the array of the parent node
+            - is_left : bool - to determine whether to go left or right
+
+            Raises:
+            - 
+            - 
+
+            Returns:
+            - None
+
+            Complexity:
+            - Worst case: O(n), n : the number of nodes.
+            - Best case: O(1).        
+        """
     def get_sorted_array_aux(self, current : TreeNode , array : ArrayR , parent_index : int , is_left : bool) -> None:
         if current == None:
             return

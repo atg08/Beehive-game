@@ -9,7 +9,7 @@ NUMBER_OF_CHILDREN = 8
 
 def get_octant(reference_key : Point , input_key : Point) -> int:
     """
-        Get the correct space between 8 (x,y,z axis)
+        Get the correct index between 8 (x,y,z axis)
 
         Args:
         - reference_key : Tuple[int, int, int]
@@ -20,7 +20,7 @@ def get_octant(reference_key : Point , input_key : Point) -> int:
         - 
 
         Returns:
-        - return betwen 0 ~ 7
+        - return int betwen 0 ~ 7
 
         Complexity:
         - O(1)   
@@ -65,6 +65,12 @@ class BeeNode:
     subtree_size: int = 1
 
     def __init__(self, key : Point, item : I) -> None:
+          """
+          Complexity:
+            - Best case: O(1)
+            - Worst case: O(n) , n is len(self.my_child)
+          """
+          
           self.key = key
           self.item = item
           self.my_child = ArrayR(length = NUMBER_OF_CHILDREN)
@@ -73,6 +79,23 @@ class BeeNode:
                 
 
     def get_child_for_key(self, point: Point) -> BeeNode | None:
+          """
+          Returns one of the node's children (either a BeeNode or None) depending on the key and which octant it resides in or could reside in
+
+          Args:
+            - self
+            - point: Point.
+            
+            Raises:
+            - 
+
+            Returns:
+            - Beenode or None.
+
+          Complexity:
+            - Best case: O(1)
+            - Worst case: O(1)
+          """
           octant = get_octant(reference_key = self.key , input_key = point)
           return self.my_child[octant]
           
@@ -137,7 +160,7 @@ class ThreeDeeBeeTree(Generic[I]):
 
             Complexity:
             - Best case: O(1)
-            - Worst case: O(log n + O) : n, the total number of points. O, the number of points returned by function.
+            - Worst case: O(n) : n, the total number of keys.
         """
         if current is None:
             raise KeyError('Key not found: {0}'.format(key))
@@ -166,8 +189,9 @@ class ThreeDeeBeeTree(Generic[I]):
             Returns:
             - current : Beenode.
 
-            Complexity:
-            - Best & Worst case: O(D) : Depth of beenode.
+            Complexity: 
+            - Best case: O(1)
+            - Worst case: O(n) : n , total number of keys.
         """
 
         if current is None:

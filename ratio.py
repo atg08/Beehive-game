@@ -2,8 +2,6 @@ from __future__ import annotations
 from typing import Generic, TypeVar
 from math import ceil
 from bst import BinarySearchTree
-import math
-from algorithms.binary_search import binary_search
 
 T = TypeVar("T")
 I = TypeVar("I")
@@ -11,10 +9,16 @@ I = TypeVar("I")
 class Percentiles(Generic[T]):
 
     def __init__(self) -> None:
+        """
+            Complexity:
+            - Best case: O(1)
+            - Worst case: O(1)
+        
+        """
         self.my_pointy_tree : BinarySearchTree[T , I] = BinarySearchTree()
 
 
-    def add_point(self, item: T):
+    def add_point(self, item: T) -> None:
         """
             Adds a point to the object.
 
@@ -26,15 +30,15 @@ class Percentiles(Generic[T]):
             - 
 
             Returns:
-            - 
+            - None
 
             Complexity:
             - Best case: O(1)
-            - Worst case: O(log n) : the number of nodes.
+            - Worst case: O(log n) : n is the number of nodes.
         """
         self.my_pointy_tree[item] = item
     
-    def remove_point(self, item: T):
+    def remove_point(self, item: T) -> None:
         """
             Removes a point from the object.
 
@@ -50,7 +54,7 @@ class Percentiles(Generic[T]):
 
             Complexity:
             - Best case: O(1)
-            - Worst case: O(log n) : the number of nodes.
+            - Worst case: O(log n) : n is the number of nodes.
         """
         del self.my_pointy_tree[item]
 
@@ -76,8 +80,8 @@ class Percentiles(Generic[T]):
         """
         array = self.my_pointy_tree.get_sorted_array()
 
-        lower_limit = math.ceil(len(self.my_pointy_tree)*(x/100))
-        upper_limit = len(self.my_pointy_tree) - math.ceil(len(self.my_pointy_tree)*(y/100))
+        lower_limit = ceil(len(self.my_pointy_tree)*(x/100))
+        upper_limit = len(self.my_pointy_tree) - ceil(len(self.my_pointy_tree)*(y/100))
 
         temp_list : list[T] = []
 

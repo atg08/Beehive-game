@@ -37,7 +37,7 @@ class Beehive:
             - other : other beehive for compare.
 
             Returns:
-            - it returns smaller or equal nutrient_factor.
+            - it returns lesser or equal nutrient_factor.
 
             Complexity:
             - Best & Worst case : O(1)
@@ -47,6 +47,10 @@ class Beehive:
 class BeehiveSelector:
 
     def __init__(self, max_beehives: int) -> None:
+        """
+        Complexity:
+        - Best case & Worst case : O(1)
+        """
         self.my_beehive : MaxHeap[Beehive] = MaxHeap(max_size = max_beehives)
 
     def set_all_beehives(self, hive_list: list[Beehive]) -> None:
@@ -61,11 +65,11 @@ class BeehiveSelector:
             - it returns smaller or equal nutrient_factor.
 
             Complexity:
-            - Best case & Worst case : O(M log M), M is len(hive_list)
+            - Best case & Worst case : O(M), M is len(hive_list)
         """
         self.my_beehive.length = 0
         for i in range (len(hive_list)):
-            self.my_beehive.add(hive_list[i])
+            self.my_beehive.add(element = hive_list[i])
     
     def add_beehive(self, hive: Beehive) -> None:
         """
