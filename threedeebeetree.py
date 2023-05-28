@@ -8,6 +8,24 @@ Point = Tuple[int, int, int]
 NUMBER_OF_CHILDREN = 8
 
 def get_octant(reference_key : Point, input_key : Point) -> int:
+    """
+        Get the correct space between 8 (x,y,z axis)
+
+        Args:
+        - reference_key : Tuple[int, int, int]
+        - input_key : Tuple[int, int, int]
+
+        Raises:
+        - 
+        - 
+
+        Returns:
+        - return betwen 0 ~ 7
+
+        Complexity:
+        - O(1)   
+    """
+
     if input_key[2] >= reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] >= reference_key[0]: 
         return 0
     elif input_key[2] >= reference_key[2] and input_key[1] >= reference_key[1] and input_key[0] < reference_key[0]: 
@@ -107,6 +125,7 @@ class ThreeDeeBeeTree(Generic[I]):
             - Best case: O(1)
             - Worst case: O(log n + O) : n, the total number of points. O, the number of points returned by function.
         """
+
         if current is None:
             raise ValueError ("Key is None !")
         elif current.key == key:
@@ -122,8 +141,22 @@ class ThreeDeeBeeTree(Generic[I]):
     def insert_aux(self, current: BeeNode, key: Point, item: I) -> BeeNode:
         """
             Attempts to insert an item into the tree, it uses the Key to insert it
-        """
 
+            Args:
+            - current : Beenode.
+            - key : Point
+            - item : item
+            
+            Raises:
+            - ValueError : when the key is not in current. 
+
+            Returns:
+            - current : Beenode.
+
+            Complexity:
+            - Best & Worst case: O(D) : Depth of beenode.
+        """
+        
         if current is None:
             current = BeeNode(key = key , item = item)
             self.length += 1
@@ -143,10 +176,6 @@ class ThreeDeeBeeTree(Generic[I]):
             Args:
             - current : Beenode.
             
-            Raises:
-            - 
-            - 
-
             Returns:
             - Boolean : current node is leaf or not.
 

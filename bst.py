@@ -11,7 +11,7 @@ __docformat__ = 'reStructuredText'
 from typing import TypeVar, Generic
 from node import TreeNode
 import sys
-
+from referential_array import ArrayR
 
 # generic types
 K = TypeVar('K')
@@ -28,7 +28,7 @@ class BinarySearchTree(Generic[K, I]):
             :complexity: O(1)
         """
 
-        self.root = None
+        self.root : TreeNode[K,I]|None = None
         self.length = 0
 
     def is_empty(self) -> bool:
@@ -39,7 +39,10 @@ class BinarySearchTree(Generic[K, I]):
         return self.root is None
 
     def __len__(self) -> int:
-        """ Returns the number of nodes in the tree. """
+        """ 
+            Returns the number of nodes in the tree.
+            :complexity: O(1)
+        """
 
         return self.length
 
@@ -108,6 +111,10 @@ class BinarySearchTree(Generic[K, I]):
         """
             Attempts to delete an item from the tree, it uses the Key to
             determine the node to delete.
+            :complexity best: O(CompK) deletes the item at the root.
+            :complexity worst: O(CompK * D) deleting at the bottom of the tree
+            where D is the depth of the tree
+            CompK is the complexity of comparing the keys
         """
 
         if current is None:  # key not found
@@ -141,22 +148,17 @@ class BinarySearchTree(Generic[K, I]):
     def get_successor(self, current: TreeNode) -> TreeNode:
         """
             Get successor of the current node.
-            It should be a child node having the smallest key among all the
-            larger keys.
+            It should be a child node having the smallest key among all the larger keys.
 
             Args:
             - current: current Treenode
-
-            Raises:
-            - 
-            - 
 
             Returns:
             - result: given some subtree node current, the smallest key node in the subtree rooted at current.
 
             Complexity:
             - Worst case: O(traverse_left)
-            - Best case: O(1), 
+            - Best case: O(1) 
         """
         if current.right == None:
             return None
@@ -200,7 +202,7 @@ class BinarySearchTree(Generic[K, I]):
 
             Complexity:
             - Worst case: O(n), n : the number of nodes.
-            - Best case: O(1)
+            - Best case: O(h), h : height of the left tree.
         """
         if current.left == None:
             return current
@@ -234,7 +236,22 @@ class BinarySearchTree(Generic[K, I]):
 
     def kth_smallest(self, k: int, current: TreeNode) -> TreeNode:
         """
-        Finds the kth smallest value by key in the subtree rooted at current.
+            Finds the kth smallest value by key in the subtree rooted at current.
+
+            Args:
+            - k : kth smallest
+            - current: current Treenode
+
+            Raises:
+            - 
+            - 
+
+            Returns:
+            - result: treenode that is the kth smallest.
+
+            Complexity:
+            - Worst case: O(n), n : the number of nodes.
+            - Best case: O(1) when k = current.        
         """
 
 
@@ -258,3 +275,42 @@ class BinarySearchTree(Generic[K, I]):
                 return self.kth_smallest(k = k , current = current.left)
             else:
                 return self.kth_smallest(k = (k - (current.subtree_size - current.right.subtree_size)), current = current.right)
+
+
+    def get_sorted_array(self) -> ArrayR[I]:
+
+        sorted_array : ArrayR[I] = ArrayR(length = len(self))
+        if self.root.left == None:
+            index = 0
+        else:
+            index = self.root.left.subtree_size
+        sorted_array[index] = self.root.item
+        self.get_sorted_array_aux(current = self.root.left , array = sorted_array , parent_index = index , is_left = True)
+        self.get_sorted_array_aux(current = self.root.right , array = sorted_array , parent_index = index , is_left = False)
+        return sorted_array
+      
+        
+    def get_sorted_array_aux(self, current : TreeNode , array : ArrayR , parent_index : int , is_left : bool) -> None:
+        if current == None:
+            return
+        if current.left == None:
+            left_subtree_size = 0
+        else:
+            left_subtree_size = current.left.subtree_size
+
+        if current.right == None:
+            right_subtree_size = 0
+        else:
+            right_subtree_size = current.right.subtree_size
+        
+        if is_left == True:
+            index = parent_index - right_subtree_size - 1
+        else:
+            index = parent_index + left_subtree_size + 1
+
+        array[index] = current.item
+
+        self.get_sorted_array_aux(current = current.left , array = array , parent_index = index , is_left = True)
+        self.get_sorted_array_aux(current = current.right , array = array , parent_index = index , is_left = False)
+
+        return
