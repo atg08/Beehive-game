@@ -3,6 +3,7 @@ from ed_utils.decorators import number, visibility
 from ed_utils.timeout import timeout
 
 from bst import BinarySearchTree
+from referential_array import ArrayR
 
 class BSTTest(unittest.TestCase):
 
@@ -71,6 +72,12 @@ class BSTTest(unittest.TestCase):
 
         successor = BST.get_successor(BST.root.left.right.left)
         self.assertEqual(successor, None)
+
+        BST.draw()
+        
+        array = BST.get_sorted_array()
+        for i in range (len(array)):
+            print("array is " , array[i])
 
 
 

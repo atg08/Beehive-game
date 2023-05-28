@@ -12,31 +12,59 @@ class Percentiles(Generic[T]):
 
 
 
-    def __init__(self) -> None:
-        self.my_pointy_tree : list[T] = []
+    # def __init__(self) -> None:
+    #     self.my_pointy_tree : list[T] = []
 
 
-    def add_point(self, item: T , input_key = lambda x : x):
-        index = binary_search(l = self.my_pointy_tree , item = item , key = input_key, is_insert = True)
-        self.my_pointy_tree.insert(index , item)
+    # def add_point(self, item: T , input_key = lambda x : x):
+    #     index = binary_search(l = self.my_pointy_tree , item = item , key = input_key, is_insert = True)
+    #     self.my_pointy_tree.insert(index , item)
     
 
-    def remove_point(self, item: T , input_key = lambda x : x):
-        index = binary_search(l = self.my_pointy_tree , item = item , key = input_key)
-        del self.my_pointy_tree[index]
+    # def remove_point(self, item: T , input_key = lambda x : x):
+    #     index = binary_search(l = self.my_pointy_tree , item = item , key = input_key)
+    #     del self.my_pointy_tree[index]
         
 
+    # def ratio(self, x, y) -> list[T]:
+    #     lower_limit = math.ceil(len(self.my_pointy_tree)*(x/100))
+    #     upper_limit = len(self.my_pointy_tree) - math.ceil(len(self.my_pointy_tree)*(y/100))
+
+    #     temp_list : list[T] = []
+
+    #     for node_index in range (lower_limit, upper_limit):
+    #         temp_list.append(self.my_pointy_tree[node_index])
+
+
+    #     return temp_list
+    
+
+    def __init__(self) -> None:
+        self.my_pointy_tree : BinarySearchTree[T , I] = BinarySearchTree()
+
+
+    def add_point(self, item: T):
+        self.my_pointy_tree[item] = item
+    
+    def remove_point(self, item: T):
+        del self.my_pointy_tree[item]
+
     def ratio(self, x, y) -> list[T]:
+        
+        array = self.my_pointy_tree.get_sorted_array()
+
         lower_limit = math.ceil(len(self.my_pointy_tree)*(x/100))
         upper_limit = len(self.my_pointy_tree) - math.ceil(len(self.my_pointy_tree)*(y/100))
 
+        #print("lower limit is " , lower_limit , "\nupper limit is " , upper_limit , "\nlength of tree is " , len(self.my_pointy_tree))
         temp_list : list[T] = []
 
         for node_index in range (lower_limit, upper_limit):
-            temp_list.append(self.my_pointy_tree[node_index])
+            temp_list.append(array[node_index])
 
 
         return temp_list
+    
     
 
     # def __init__(self) -> None:
@@ -44,12 +72,15 @@ class Percentiles(Generic[T]):
 
 
     # def add_point(self, item: T):
-    #     self.my_pointy_tree[item] = None
+    #     self.my_pointy_tree[item] = item
     
     # def remove_point(self, item: T):
     #     del self.my_pointy_tree[item]
 
     # def ratio(self, x, y) -> list[T]:
+        
+    #     array = self.my_pointy_tree.get_sorted_array()
+
     #     lower_limit = math.ceil(len(self.my_pointy_tree)*(x/100))
     #     upper_limit = len(self.my_pointy_tree) - math.ceil(len(self.my_pointy_tree)*(y/100))
 
@@ -75,4 +106,6 @@ if __name__ == "__main__":
         p.add_point(point)
     # p.my_pointy_tree.draw()
     # Numbers from 8 to 16.
+    print(p.ratio(15, 66))
+    p.remove_point(10)
     print(p.ratio(15, 66))

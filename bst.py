@@ -11,6 +11,7 @@ __docformat__ = 'reStructuredText'
 from typing import TypeVar, Generic
 from node import TreeNode
 import sys
+from referential_array import ArrayR
 
 
 # generic types
@@ -186,7 +187,7 @@ class BinarySearchTree(Generic[K, I]):
 
         if current is not None:
             real_prefix = prefix[:-2] + final
-            print('{0}{1}'.format(real_prefix, str(current.key)), file=to)
+            print('{0}{1} , {2}'.format(real_prefix, str(current.key) , str(current.item)), file=to)
 
             if current.left or current.right:
                 self.draw_aux(current.left,  prefix=prefix + '\u2551 ', final='\u255f\u2500', to=to)
@@ -205,7 +206,7 @@ class BinarySearchTree(Generic[K, I]):
         else:
             left_subtree_size = current.left.subtree_size
 
-        if current.left == None and current.right == None:
+        if self.is_leaf(current = current):
             if k != 1:
                 return None
             return current 
@@ -215,6 +216,51 @@ class BinarySearchTree(Generic[K, I]):
             return self.kth_smallest(k = k , current = current.left)
         else:
             return self.kth_smallest(k = (k - (left_subtree_size + 1)) , current = current.right)
-            
+    
+    def get_sorted_array(self) -> ArrayR[I]:
+
+        sorted_array : ArrayR[I] = ArrayR(length = len(self))
+        if self.root.left == None:
+            index = 0
+        else:
+            index = self.root.left.subtree_size
+        sorted_array[index] = self.root.item
+        self.get_sorted_array_aux(current = self.root.left , array = sorted_array , parent_index = index , is_left = True)
+        self.get_sorted_array_aux(current = self.root.right , array = sorted_array , parent_index = index , is_left = False)
+        return sorted_array
+      
+        
+    def get_sorted_array_aux(self, current : TreeNode , array : ArrayR , parent_index : int , is_left : bool) -> None:
+        if current == None:
+            return
+        if current.left == None:
+            left_subtree_size = 0
+        else:
+            left_subtree_size = current.left.subtree_size
+
+        if current.right == None:
+            right_subtree_size = 0
+        else:
+            right_subtree_size = current.right.subtree_size
+        
+        if is_left == True:
+            index = parent_index - right_subtree_size - 1
+        else:
+            index = parent_index + left_subtree_size + 1
+
+        array[index] = current.item
+
+        self.get_sorted_array_aux(current = current.left , array = array , parent_index = index , is_left = True)
+        self.get_sorted_array_aux(current = current.right , array = array , parent_index = index , is_left = False)
+
+        return
+
+       
+
+        
+
+
+        
+
         
 
