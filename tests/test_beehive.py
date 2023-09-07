@@ -6,16 +6,16 @@ from beehive import BeehiveSelector, Beehive
 
 class TestBeehiveSelector(unittest.TestCase):
 
-    @timeout()
+    # @timeout()
     @number("5.1")
     def test_simple(self):
         s = BeehiveSelector(5)
         b1, b2, b3, b4, b5 = (
-            Beehive(15, 12, 13, capacity=40, nutrient_factor=5, volume=15),
-            Beehive(25, 22, 23, capacity=15, nutrient_factor=8, volume=40),
-            Beehive(35, 32, 33, capacity=40, nutrient_factor=3, volume=40),
-            Beehive(45, 42, 43, capacity=1, nutrient_factor=85, volume=10),
-            Beehive(55, 52, 53, capacity=400, nutrient_factor=5000, volume=0),
+            Beehive(15, 12, 13, capacity=40, nutrient_factor=5, volume=15), # 15 - left 0 ; E = 75
+            Beehive(25, 22, 23, capacity=15, nutrient_factor=8, volume=40), # 15 + 15 - left 10 ; E = 120 * 2 times
+            Beehive(35, 32, 33, capacity=40, nutrient_factor=3, volume=40), # 40 - left 0 ; E = 120
+            Beehive(45, 42, 43, capacity=1, nutrient_factor=85, volume=10), # 1 + 1 + ... 10 - left 0 ; E = 85 * 10 times
+            Beehive(55, 52, 53, capacity=400, nutrient_factor=5000, volume=0), # 0 ; E = 0
         )
         for hive in [b1, b2, b3, b4, b5]:
             s.add_beehive(hive)

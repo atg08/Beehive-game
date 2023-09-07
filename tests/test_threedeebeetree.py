@@ -64,3 +64,21 @@ class TestThreeDeeBeeTree(unittest.TestCase):
         
         self.assertEqual(tdbt.get_tree_node_by_key((16, 0, -14)).item, 7)
         self.assertEqual(tdbt.get_tree_node_by_key((6, -1, -17)).item, 0)
+
+        self.assertRaises(KeyError, lambda : tdbt.get_tree_node_by_key((0, 0, 0)))
+
+        child = tdbt.get_tree_node_by_key((16, 0, -14))
+        self.assertEqual(tdbt.is_leaf(child), True)
+
+        child1 = tdbt.get_tree_node_by_key((-18, 7, 5))
+        self.assertEqual(tdbt.is_leaf(child1), True)
+
+        child2 = tdbt.get_tree_node_by_key((6, -1, -17))
+        self.assertEqual(tdbt.is_leaf(child2), False)
+
+        self.assertEqual(tdbt.is_leaf(tdbt.root) , False)
+
+        self.assertEqual(tdbt[(16, 0, -14)], 7)
+
+        
+

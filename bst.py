@@ -11,6 +11,7 @@ __docformat__ = 'reStructuredText'
 from typing import TypeVar, Generic
 from node import TreeNode
 import sys
+from referential_array import ArrayR
 
 
 # generic types
@@ -28,7 +29,7 @@ class BinarySearchTree(Generic[K, I]):
             :complexity: O(1)
         """
 
-        self.root = None
+        self.root : TreeNode[K,I]|None = None
         self.length = 0
 
     def is_empty(self) -> bool:
@@ -39,8 +40,10 @@ class BinarySearchTree(Generic[K, I]):
         return self.root is None
 
     def __len__(self) -> int:
-        """ Returns the number of nodes in the tree. """
-
+        """ 
+            Returns the number of nodes in the tree.
+            :complexity: O(1)
+        """
         return self.length
 
     def __contains__(self, key: K) -> bool:
@@ -93,8 +96,10 @@ class BinarySearchTree(Generic[K, I]):
             self.length += 1
         elif key < current.key:
             current.left = self.insert_aux(current.left, key, item)
+            current.subtree_size += 1
         elif key > current.key:
             current.right = self.insert_aux(current.right, key, item)
+            current.subtree_size += 1
         else:  # key == current.key
             raise ValueError('Inserting duplicate item')
         return current
@@ -106,14 +111,20 @@ class BinarySearchTree(Generic[K, I]):
         """
             Attempts to delete an item from the tree, it uses the Key to
             determine the node to delete.
+            :complexity best: O(CompK) deletes the item at the root.
+            :complexity worst: O(CompK * D) deleting at the bottom of the tree
+            where D is the depth of the tree
+            CompK is the complexity of comparing the keys
         """
 
         if current is None:  # key not found
             raise ValueError('Deleting non-existent item')
         elif key < current.key:
             current.left  = self.delete_aux(current.left, key)
+            current.subtree_size -= 1
         elif key > current.key:
             current.right = self.delete_aux(current.right, key)
+            current.subtree_size -= 1
         else:  # we found our key => do actual deletion
             if self.is_leaf(current):
                 self.length -= 1
@@ -130,25 +141,87 @@ class BinarySearchTree(Generic[K, I]):
             current.key  = succ.key
             current.item = succ.item
             current.right = self.delete_aux(current.right, succ.key)
+            current.subtree_size -= 1
+            
 
         return current
 
     def get_successor(self, current: TreeNode) -> TreeNode:
         """
             Get successor of the current node.
-            It should be a child node having the smallest key among all the
-            larger keys.
+            It should be a child node having the smallest key among all the larger keys.
+
+            Args:
+            - current: current Treenode
+
+            Returns:
+            - result: given some subtree node current, the smallest key node in the subtree rooted at current.
+
+            Complexity:
+            - Worst case: O(traverse_left)
+            - Best case: O(1) 
         """
-        raise NotImplementedError()
+
+        if current.right == None:
+            return None
+        elif current.right.left == None:
+                return current.right
+        else:
+            return self.traverse_left(current = current.right.left)
+    
+
 
     def get_minimal(self, current: TreeNode) -> TreeNode:
         """
             Get a node having the smallest key in the current sub-tree.
+
+            Args:
+            - current: current Treenode
+
+            Raises:
+            - 
+            - 
+
+            Returns:
+            - result: treenode that is the smallest key node in the subtree rooted at current.
+
+            Complexity:
+            - Best & Worst case: O(traverse_left)
         """
-        raise NotImplementedError()
+        return self.traverse_left(current = current)
+    
+    
+    def traverse_left(self , current : TreeNode) -> TreeNode:
+        """
+            Traversing the left subnode of current node.
+
+            Args:
+            - current: current Treenode
+
+            Raises:
+            - 
+            - 
+
+            Returns:
+            - result: treenode that is the smallest key node in the subtree rooted at current.
+
+            Complexity:
+            - Worst case: O(n), n : the number of nodes.
+            - Best case: O(1)
+        """
+        if current.left == None:
+            return current  
+     
+        return self.traverse_left(current = current.left)
+
 
     def is_leaf(self, current: TreeNode) -> bool:
-        """ Simple check whether or not the node is a leaf. """
+        """ 
+        Simple check whether or not the node is a leaf. 
+        
+        - Worst case : O(1)
+        - Best case : O(1)
+        """
 
         return current.left is None and current.right is None
 
@@ -163,7 +236,7 @@ class BinarySearchTree(Generic[K, I]):
 
         if current is not None:
             real_prefix = prefix[:-2] + final
-            print('{0}{1}'.format(real_prefix, str(current.key)), file=to)
+            print('{0}{1} , {2}'.format(real_prefix, str(current.key) , str(current.item)), file=to)
 
             if current.left or current.right:
                 self.draw_aux(current.left,  prefix=prefix + '\u2551 ', final='\u255f\u2500', to=to)
@@ -174,6 +247,111 @@ class BinarySearchTree(Generic[K, I]):
 
     def kth_smallest(self, k: int, current: TreeNode) -> TreeNode:
         """
-        Finds the kth smallest value by key in the subtree rooted at current.
+            Finds the kth smallest value by key in the subtree rooted at current.
+
+            Args:
+            - k : kth smallest
+            - current: current Treenode
+
+            Raises:
+            - 
+            - 
+
+            Returns:
+            - result: treenode that is the kth smallest.
+
+            Complexity:
+            - Worst case: O(n), n : the number of nodes.
+            - Best case: O(1) when k = root.        
         """
-        raise NotImplementedError()
+    
+        if current.left == None:
+            left_subtree_size = 0
+        else:
+            left_subtree_size = current.left.subtree_size
+
+        if self.is_leaf(current = current):
+            if k != 1:
+                return None
+            return current 
+        elif k == left_subtree_size + 1:
+            return current
+        elif k < left_subtree_size + 1:
+            return self.kth_smallest(k = k , current = current.left)
+        else:
+            return self.kth_smallest(k = (k - (left_subtree_size + 1)) , current = current.right)
+    
+    def get_sorted_array(self) -> ArrayR[I]:
+        """
+            Sorts the array in order - ascending
+
+            Args:
+            - self
+
+            Raises:
+            - 
+            - 
+
+            Returns:
+            - result: ArrayR - array with sorted elements
+
+            Complexity: (from get_sorted_array_aux)
+            - Worst case: O(n), n : the number of nodes.
+            - Best case: O(1).      
+        """
+
+        sorted_array : ArrayR[I] = ArrayR(length = len(self))
+        if self.root.left == None:
+            index = 0
+        else:
+            index = self.root.left.subtree_size
+        sorted_array[index] = self.root.item
+        self.get_sorted_array_aux(current = self.root.left , array = sorted_array , parent_index = index , is_left = True)
+        self.get_sorted_array_aux(current = self.root.right , array = sorted_array , parent_index = index , is_left = False)
+        return sorted_array
+      
+    """
+            Auxilary method for get_sorted_array
+
+            Args:
+            - self
+            - current : TreeNode class
+            - array : ArrayR object
+            - parent_index : int - gives the index in the array of the parent node
+            - is_left : bool - to determine whether to go left or right
+
+            Raises:
+            - 
+            - 
+
+            Returns:
+            - None
+
+            Complexity:
+            - Worst case: O(n), n : the number of nodes.
+            - Best case: O(1).        
+        """
+    def get_sorted_array_aux(self, current : TreeNode , array : ArrayR , parent_index : int , is_left : bool) -> None:
+        if current == None:
+            return
+        if current.left == None:
+            left_subtree_size = 0
+        else:
+            left_subtree_size = current.left.subtree_size
+
+        if current.right == None:
+            right_subtree_size = 0
+        else:
+            right_subtree_size = current.right.subtree_size
+        
+        if is_left == True:
+            index = parent_index - right_subtree_size - 1
+        else:
+            index = parent_index + left_subtree_size + 1
+
+        array[index] = current.item
+
+        self.get_sorted_array_aux(current = current.left , array = array , parent_index = index , is_left = True)
+        self.get_sorted_array_aux(current = current.right , array = array , parent_index = index , is_left = False)
+
+        return
